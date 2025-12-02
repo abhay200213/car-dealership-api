@@ -24,8 +24,8 @@ app.use(express.json());
 
 // Rate limiter for all v1 routes
 const apiLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minutes
-  max: 3,                  // limit each IP to 3 requests per window
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,                  // limit each IP to 100 requests per window
   standardHeaders: true,
   legacyHeaders: false     
 });

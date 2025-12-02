@@ -33,3 +33,37 @@ Rate limiting is a standard best practice for production APIs and fits the cours
 
    ```bash
    npm install express-rate-limit
+
+
+## The component will be used to:
+
+- Prevent excessive API requests  
+- Add rate-limiting rules for public endpoints  
+- Improve overall API stability and safety  
+
+---
+
+## Git Workflow
+
+This project uses:
+
+- `main` — final, stable branch  
+- `development` — active work  
+- `feature/*` — per-issue branches (optional)
+
+A GitHub Project Board tracks all tasks.
+
+---
+
+## Milestone 1 Status
+
+- Environment and repository setup  
+- CRUD operations for Vehicles & Appointments  
+- Joi validation  
+- Swagger documentation initialized  
+- New component research completed  
+- 18 passing tests (96% coverage)  
+- GitHub board + issues created  
+
+Milestone 1 completed successfully.
+

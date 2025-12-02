@@ -7,6 +7,7 @@ module.exports = {
 collectCoverageFrom: [
   'src/api/v1/services/vehicleService.ts',
   'src/api/v1/services/appointmentService.ts',
-  'src/validation/**/*.ts'
+  'src/validation/**/*.ts',
+  'src/config/rateLimit.ts'
 ]
 };
