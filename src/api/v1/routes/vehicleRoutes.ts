@@ -7,7 +7,7 @@ const router = Router();
 
 // SEARCH — GET /api/v1/vehicles/search
 router.get(
-  '/vehicles/search',
+  '/search',
   authenticate,
   authorize(['admin', 'manager', 'user']),
   vehicleController.searchVehicles
@@ -15,7 +15,7 @@ router.get(
 
 // GET all — GET /api/v1/vehicles
 router.get(
-  '/vehicles',
+  '/',
   authenticate,
   authorize(['admin', 'manager', 'user']),
   vehicleController.getAllVehicles
@@ -23,15 +23,15 @@ router.get(
 
 // GET one — GET /api/v1/vehicles/:id
 router.get(
-  '/vehicles/:id',
+  '/:id',
   authenticate,
   authorize(['admin', 'manager', 'user']),
-  vehicleController.getVehicleById   // FIXED NAME
+  vehicleController.getVehicleById
 );
 
 // CREATE — POST /api/v1/vehicles
 router.post(
-  '/vehicles',
+  '/',
   authenticate,
   authorize(['admin', 'manager']),
   vehicleController.createVehicle
@@ -39,7 +39,7 @@ router.post(
 
 // UPDATE — PUT /api/v1/vehicles/:id
 router.put(
-  '/vehicles/:id',
+  '/:id',
   authenticate,
   authorize(['admin', 'manager']),
   vehicleController.updateVehicle
@@ -47,7 +47,7 @@ router.put(
 
 // DELETE — DELETE /api/v1/vehicles/:id
 router.delete(
-  '/vehicles/:id',
+  '/:id',
   authenticate,
   authorize(['admin', 'manager']),
   vehicleController.deleteVehicle
