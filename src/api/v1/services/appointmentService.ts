@@ -35,8 +35,8 @@ export const createAppointment = async (
 
   const appointment: Appointment = {
     id: newId,
-    status: 'scheduled',
     ...data,
+    status: data.status ?? 'scheduled',
     createdAt: now,
     updatedAt: now
   };
@@ -45,6 +45,7 @@ export const createAppointment = async (
 
   return appointment;
 };
+
 
 export const updateAppointment = async (
   id: number,

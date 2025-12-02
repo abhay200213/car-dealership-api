@@ -44,7 +44,6 @@ export const createAppointment = async (
   next: NextFunction
 ) => {
   try {
-    // TODO: add Joi validation later
     const appointment = await appointmentService.createAppointment(req.body);
     res.status(201).json(appointment);
   } catch (err) {
