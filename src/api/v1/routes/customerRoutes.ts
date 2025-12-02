@@ -1,22 +1,48 @@
 import { Router } from 'express';
-
 import * as customerController from '../controllers/customerController';
+import { authenticate } from '../../../middleware/auth';
+import { authorize } from '../../../middleware/authorize';
 
 const router = Router();
 
-// GET /api/v1/customers
-router.get('/customers', customerController.getAllCustomers);
+// GET all customers — GET /api/v1/customers
+router.get(
+  '/',
+  authenticate,
+  authorize(['admin', 'manager']),
+  customerController.getAllCustomers
+);
 
-// GET /api/v1/customers/:id
-router.get('/customers/:id', customerController.getCustomerById);
+// GET one customer — GET /api/v1/customers/:id
+router.get(
+  '/:id',
+  authenticate,
+  authorize(['admin', 'manager']),
+  customerController.getCustomerById
+);
 
-// POST /api/v1/customers
-router.post('/customers', customerController.createCustomer);
+// CREATE customer — POST /api/v1/customers
+router.post(
+  '/',
+  authenticate,
+  authorize(['admin', 'manager']),
+  customerController.createCustomer
+);
 
-// PUT /api/v1/customers/:id
-router.put('/customers/:id', customerController.updateCustomer);
+// UPDATE customer — PUT /api/v1/customers/:id
+router.put(
+  '/:id',
+  authenticate,
+  authorize(['admin', 'manager']),
+  customerController.updateCustomer
+);
 
-// DELETE /api/v1/customers/:id
-router.delete('/customers/:id', customerController.deleteCustomer);
+// DELETE customer — DELETE /api/v1/customers/:id
+router.delete(
+  '/:id',
+  authenticate,
+  authorize(['admin']),
+  customerController.deleteCustomer
+);
 
 export default router;

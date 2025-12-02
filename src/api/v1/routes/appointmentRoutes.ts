@@ -1,30 +1,51 @@
 import { Router } from 'express';
-import * as appointmentController from '../controllers/appointmentController.ts';
+import * as appointmentController from '../controllers/appointmentController';
+import { authenticate } from '../../../middleware/auth';
+import { authorize } from '../../../middleware/authorize';
 import { validateAppointment } from '../../../validation/appointmentValidation';
 
 const router = Router();
 
-// GET /api/v1/appointments
-router.get('/appointments', appointmentController.getAllAppointments);
+// GET all appointments — GET /api/v1/appointments
+router.get(
+  '/',
+  authenticate,
+  authorize(['admin', 'manager']),
+  appointmentController.getAllAppointments
+);
 
-// GET /api/v1/appointments/:id
-router.get('/appointments/:id', appointmentController.getAppointmentById);
+// GET one appointment — GET /api/v1/appointments/:id
+router.get(
+  '/:id',
+  authenticate,
+  authorize(['admin', 'manager']),
+  appointmentController.getAppointmentById
+);
 
-// POST /api/v1/appointments
+// CREATE appointment — POST /api/v1/appointments
 router.post(
-  '/appointments',
+  '/',
+  authenticate,
+  authorize(['admin', 'manager', 'user']),
   validateAppointment,
   appointmentController.createAppointment
 );
 
-// PUT /api/v1/appointments/:id
+// UPDATE appointment — PUT /api/v1/appointments/:id
 router.put(
-  '/appointments/:id',
+  '/:id',
+  authenticate,
+  authorize(['admin', 'manager']),
   validateAppointment,
   appointmentController.updateAppointment
 );
 
-// DELETE /api/v1/appointments/:id
-router.delete('/appointments/:id', appointmentController.deleteAppointment);
+// DELETE appointment — DELETE /api/v1/appointments/:id
+router.delete(
+  '/:id',
+  authenticate,
+  authorize(['admin', 'manager']),
+  appointmentController.deleteAppointment
+);
 
 export default router;

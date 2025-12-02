@@ -1,21 +1,48 @@
 import { Router } from 'express';
 import * as saleController from '../controllers/saleController';
+import { authenticate } from '../../../middleware/auth';
+import { authorize } from '../../../middleware/authorize';
 
 const router = Router();
 
-// GET /api/v1/sales
-router.get('/sales', saleController.getAllSales);
+// GET all sales — GET /api/v1/sales
+router.get(
+  '/',
+  authenticate,
+  authorize(['admin', 'manager']),
+  saleController.getAllSales
+);
 
-// GET /api/v1/sales/:id
-router.get('/sales/:id', saleController.getSaleById);
+// GET one sale — GET /api/v1/sales/:id
+router.get(
+  '/:id',
+  authenticate,
+  authorize(['admin', 'manager']),
+  saleController.getSaleById
+);
 
-// POST /api/v1/sales
-router.post('/sales', saleController.createSale);
+// CREATE sale — POST /api/v1/sales
+router.post(
+  '/',
+  authenticate,
+  authorize(['admin', 'manager']),
+  saleController.createSale
+);
 
-// PUT /api/v1/sales/:id
-router.put('/sales/:id', saleController.updateSale);
+// UPDATE sale — PUT /api/v1/sales/:id
+router.put(
+  '/:id',
+  authenticate,
+  authorize(['admin', 'manager']),
+  saleController.updateSale
+);
 
-// DELETE /api/v1/sales/:id
-router.delete('/sales/:id', saleController.deleteSale);
+// DELETE sale — DELETE /api/v1/sales/:id
+router.delete(
+  '/:id',
+  authenticate,
+  authorize(['admin']),
+  saleController.deleteSale
+);
 
 export default router;
