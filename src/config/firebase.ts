@@ -1,24 +1,35 @@
-import admin from 'firebase-admin';
+// src/config/firebase.ts
+import admin, { ServiceAccount } from 'firebase-admin';
+import dotenv from 'dotenv';
 
-let app: admin.app.App;
+dotenv.config();
+
+const {
+  FIREBASE_PROJECT_ID,
+  FIREBASE_CLIENT_EMAIL,
+  FIREBASE_PRIVATE_KEY,
+} = process.env;
+
+if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY) {
+  throw new Error(
+    'Missing Firebase configuration. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY in .env'
+  );
+}
+
+// If the private key is stored with escaped newlines (\n), convert them to real newlines
+const privateKey = FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
+
+const serviceAccount: ServiceAccount = {
+  projectId: FIREBASE_PROJECT_ID,
+  clientEmail: FIREBASE_CLIENT_EMAIL,
+  privateKey,
+};
 
 if (!admin.apps.length) {
-  const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-
-  if (!serviceAccountJson) {
-    throw new Error(
-      'FIREBASE_SERVICE_ACCOUNT_KEY env var is not set. It should contain the JSON for the service account.'
-    );
-  }
-
-  const serviceAccount = JSON.parse(serviceAccountJson);
-
-  app = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount)
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
   });
-} else {
-  app = admin.app();
 }
 
 export const db = admin.firestore();
-export { admin, app };
+export { admin };
