@@ -13,6 +13,43 @@ router.get(
   vehicleController.searchVehicles
 );
 
+/**
+ * @swagger
+ * /api/v1/vehicles:
+ *   get:
+ *     summary: Get all vehicles
+ *     tags: [Vehicles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: make
+ *         schema:
+ *           type: string
+ *         description: Filter by make
+ *       - in: query
+ *         name: model
+ *         schema:
+ *           type: string
+ *         description: Filter by model
+ *       - in: query
+ *         name: minPrice
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: maxPrice
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Vehicles retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       429:
+ *         description: Too many requests
+ */
+
+
 // GET all — GET /api/v1/vehicles
 router.get(
   '/',
@@ -54,3 +91,5 @@ router.delete(
 );
 
 export default router;
+
+
