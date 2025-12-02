@@ -99,3 +99,41 @@ export const deleteVehicle = async (
     next(err);
   }
 };
+
+/**
+ * GET /vehicles/search
+ * Advanced search with filtering and sorting.
+ */
+export const searchVehicles = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const {
+      make,
+      model,
+      minYear,
+      maxYear,
+      minPrice,
+      maxPrice,
+      sortBy,
+      sortOrder,
+    } = req.query;
+
+    const vehicles = await vehicleService.searchVehicles({
+      make: make as string | undefined,
+      model: model as string | undefined,
+      minYear: minYear ? Number(minYear) : undefined,
+      maxYear: maxYear ? Number(maxYear) : undefined,
+      minPrice: minPrice ? Number(minPrice) : undefined,
+      maxPrice: maxPrice ? Number(maxPrice) : undefined,
+      sortBy: sortBy as 'price' | 'year' | undefined,
+      sortOrder: sortOrder as 'asc' | 'desc' | undefined,
+    });
+
+    res.status(200).json(vehicles);
+  } catch (err) {
+    next(err);
+  }
+};

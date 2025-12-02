@@ -1,21 +1,56 @@
 import { Router } from 'express';
 import * as vehicleController from '../controllers/vehicleController';
+import { authenticate } from '../../../middleware/auth';
+import { authorize } from '../../../middleware/authorize';
 
 const router = Router();
 
-// GET /api/v1/vehicles
-router.get('/vehicles', vehicleController.getAllVehicles);
+// SEARCH — GET /api/v1/vehicles/search
+router.get(
+  '/vehicles/search',
+  authenticate,
+  authorize(['admin', 'manager', 'user']),
+  vehicleController.searchVehicles
+);
 
-// GET /api/v1/vehicles/:id
-router.get('/vehicles/:id', vehicleController.getVehicleById);
+// GET all — GET /api/v1/vehicles
+router.get(
+  '/vehicles',
+  authenticate,
+  authorize(['admin', 'manager', 'user']),
+  vehicleController.getAllVehicles
+);
 
-// POST /api/v1/vehicles
-router.post('/vehicles', vehicleController.createVehicle);
+// GET one — GET /api/v1/vehicles/:id
+router.get(
+  '/vehicles/:id',
+  authenticate,
+  authorize(['admin', 'manager', 'user']),
+  vehicleController.getVehicleById   // FIXED NAME
+);
 
-// PUT /api/v1/vehicles/:id
-router.put('/vehicles/:id', vehicleController.updateVehicle);
+// CREATE — POST /api/v1/vehicles
+router.post(
+  '/vehicles',
+  authenticate,
+  authorize(['admin', 'manager']),
+  vehicleController.createVehicle
+);
 
-// DELETE /api/v1/vehicles/:id
-router.delete('/vehicles/:id', vehicleController.deleteVehicle);
+// UPDATE — PUT /api/v1/vehicles/:id
+router.put(
+  '/vehicles/:id',
+  authenticate,
+  authorize(['admin', 'manager']),
+  vehicleController.updateVehicle
+);
+
+// DELETE — DELETE /api/v1/vehicles/:id
+router.delete(
+  '/vehicles/:id',
+  authenticate,
+  authorize(['admin', 'manager']),
+  vehicleController.deleteVehicle
+);
 
 export default router;

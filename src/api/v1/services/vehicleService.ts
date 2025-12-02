@@ -1,6 +1,17 @@
 import { db } from '../../../config/firebase';
 import { Vehicle } from '../models/vehicle';
 
+export interface VehicleQueryOptions {
+  make?: string;
+  model?: string;
+  minYear?: number;
+  maxYear?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  sortBy?: 'price' | 'year';
+  sortOrder?: 'asc' | 'desc';
+}
+
 const collection = db.collection('vehicles');
 
 /**
@@ -90,4 +101,76 @@ export const deleteVehicle = async (id: number): Promise<boolean> => {
 
   await docRef.delete();
   return true;
+};
+
+/**
+ * Search vehicles with optional filters and sorting.
+ */
+export const searchVehicles = async (
+  options: VehicleQueryOptions
+): Promise<Vehicle[]> => {
+  const snapshot = await collection.get();
+  let vehicles = snapshot.docs.map((doc) => doc.data() as Vehicle);
+
+  const {
+    make,
+    model,
+    minYear,
+    maxYear,
+    minPrice,
+    maxPrice,
+    sortBy,
+    sortOrder,
+  } = options;
+
+  if (make) {
+    vehicles = vehicles.filter(
+      (v) => v.make?.toLowerCase() === make.toLowerCase()
+    );
+  }
+
+  if (model) {
+    vehicles = vehicles.filter(
+      (v) => v.model?.toLowerCase() === model.toLowerCase()
+    );
+  }
+
+  if (typeof minYear === 'number') {
+    vehicles = vehicles.filter(
+      (v) => typeof v.year === 'number' && v.year >= minYear
+    );
+  }
+
+  if (typeof maxYear === 'number') {
+    vehicles = vehicles.filter(
+      (v) => typeof v.year === 'number' && v.year <= maxYear
+    );
+  }
+
+  if (typeof minPrice === 'number') {
+    vehicles = vehicles.filter(
+      (v) => typeof v.price === 'number' && v.price >= minPrice
+    );
+  }
+
+  if (typeof maxPrice === 'number') {
+    vehicles = vehicles.filter(
+      (v) => typeof v.price === 'number' && v.price <= maxPrice
+    );
+  }
+
+  if (sortBy) {
+    const dir = sortOrder === 'desc' ? -1 : 1;
+
+    vehicles = vehicles.sort((a, b) => {
+      const av = ((a as any)[sortBy] ?? 0) as number;
+      const bv = ((b as any)[sortBy] ?? 0) as number;
+
+      if (av > bv) return 1 * dir;
+      if (av < bv) return -1 * dir;
+      return 0;
+    });
+  }
+
+  return vehicles;
 };
