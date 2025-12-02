@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import path from 'path';
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
 
 import vehicleRoutes from './api/v1/routes/vehicleRoutes';
 import customerRoutes from './api/v1/routes/customerRoutes';
@@ -17,11 +20,28 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Load Swagger JSON
+const swaggerPath = path.join(__dirname, '..', 'swagger.json');
+let swaggerDoc: any;
+
+try {
+  const swaggerRaw = fs.readFileSync(swaggerPath, 'utf-8');
+  swaggerDoc = JSON.parse(swaggerRaw);
+} catch (err) {
+  console.warn('Swagger spec not found or invalid. /api-docs will not be available.');
+}
+
+// Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// API v1 route mounts (empty for now)
+// Swagger UI
+if (swaggerDoc) {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+}
+
+// API v1 route mounts
 app.use('/api/v1', vehicleRoutes);
 app.use('/api/v1', customerRoutes);
 app.use('/api/v1', appointmentRoutes);
