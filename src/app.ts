@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
+import rateLimit from 'express-rate-limit';
 
 import vehicleRoutes from './api/v1/routes/vehicleRoutes';
 import customerRoutes from './api/v1/routes/customerRoutes';
@@ -16,13 +17,23 @@ dotenv.config();
 
 const app = express();
 
+// Global middleware
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Rate limiter for all v1 routes
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 15 minutes
+  max: 3,                  // limit each IP to 100 requests per window
+  standardHeaders: true,
+  legacyHeaders: false     
+});
+app.use('/api/v1', apiLimiter);
+
 // Load Swagger JSON
 const swaggerPath = path.join(__dirname, '..', 'swagger.json');
-let swaggerDoc: any;
+let swaggerDoc: any = null;
 
 try {
   const swaggerRaw = fs.readFileSync(swaggerPath, 'utf-8');
