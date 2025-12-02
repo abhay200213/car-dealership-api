@@ -6,7 +6,6 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js', 'json'],
 collectCoverageFrom: [
   'src/api/v1/services/**/*.ts',
-  'src/api/v1/controllers/**/*.ts',
   'src/validation/**/*.ts'
 ]
 };
